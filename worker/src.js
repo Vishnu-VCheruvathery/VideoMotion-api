@@ -8,12 +8,11 @@ const fs = require('fs');
 const path = require('path');
 const { PutObjectCommand } = require('@aws-sdk/client-s3')
 const prisma = require('../utils/prismaClient')
-const connection = require('./redisConfig')
+const connection = require('./redisConfig');
+const { dbQueue } = require('./queues');
 
 
-const enCodeQueue = new Queue('encode', { connection });
-const uploadQueue = new Queue('upload', { connection });
-const dbQueue = new Queue('DB', {connection})
+
 
 function getAllFiles(dir) {
   let results = [];
@@ -33,8 +32,8 @@ function getAllFiles(dir) {
   return results;
 }
 
-
-const encodeWorker = new Worker('encode', async job => {
+function startWorker(){
+   const encodeWorker = new Worker('encode', async job => {
       const {title, inputPath, outputDir, contentId, taskId, episode} = job.data;
       try {
         await encodeVideo(inputPath, outputDir, title, contentId, (progress) => job.updateProgress(progress), taskId, episode)
@@ -167,5 +166,7 @@ dbWorker.on('completed', job => {
 dbWorker.on('failed', (job, err)=> {
   console.log(`Job ${job.id} failed with error: ${err}`)
 })
+}
 
-module.exports = {enCodeQueue, uploadQueue, connection}
+
+module.exports = {startWorker}

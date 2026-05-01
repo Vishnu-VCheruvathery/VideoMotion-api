@@ -25,7 +25,7 @@ const getVideoDuration = (inputPath) => {
 };
 
 async function encodeVideo(inputPath, outputDir, baseName, contentId, updateProgress, taskId, episode) {
-  console.log(typeof uploadQueue)
+
   if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
 
   const duration = await getVideoDuration(inputPath);
@@ -96,15 +96,15 @@ async function encodeVideo(inputPath, outputDir, baseName, contentId, updateProg
   masterContent += `${name}/${baseName + name}.m3u8\n\n`;
   }) 
 
-  fs.writeFileSync(masterPlaylistPath, masterContent);
+  await fs.promises.writeFile(masterPlaylistPath, masterContent);
 
 console.log('Master playlist created:', masterPlaylistPath);
 
 try {
-  const { uploadQueue } = require('../worker/src'); // ← import here, not top-level
+  const { uploadQueue } = require('../worker/queues'); // ← import here, not top-level
   if (uploadQueue && typeof uploadQueue.add === 'function') {
     await uploadQueue.add('upload', { title:baseName, outputDir, contentId, taskId, episode }, {jobId: taskId});
-    await fs.promises.rm(inputPath);
+    await fs.promises.unlink(inputPath);
   } else {
     console.error("uploadQueue is not properly initialized.");
   }

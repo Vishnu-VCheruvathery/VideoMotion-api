@@ -1,7 +1,7 @@
 require('dotenv').config()
 const Redis = require("ioredis")
 
-console.log('REDIS_URL:', process.env.REDIS_URL);
+
 const connection = new Redis(process.env.REDIS_URL, {maxRetriesPerRequest: null})
 
 

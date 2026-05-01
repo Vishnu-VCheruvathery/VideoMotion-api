@@ -3,9 +3,15 @@ const { postVideo,  createContent, deleteContent } = require('../controller/vide
 const multer = require('multer');
 const { getContent, searchContent, getContentHome, getComments, createComment, getContentByGenre } = require('../controller/contentController');
 const router = express.Router();
+const path = require('path');
 
-const upload = multer({dest: 'uploads/videos/'});
-const thumbnailUpload = multer({dest: 'uploads/thumbnails/'});
+const upload = multer({
+  dest: path.join(__dirname, '..', 'uploads', 'videos'),
+});
+
+const thumbnailUpload = multer({
+  dest: path.join(__dirname, '..', 'uploads', 'thumbnails'),
+});
 
 
 router.get('/content/genre', getContentByGenre)

@@ -8,6 +8,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 const { QueueEvents } = require('bullmq');
 const { default: Redis } = require('ioredis');
+const { startWorker } = require('./worker/src');
 const server = http.createServer(app)
 
 const io = new Server(server, {
@@ -27,6 +28,7 @@ const connection = new Redis(process.env.REDIS_URL, {maxRetriesPerRequest: null}
 
 if(connection){
     console.log('Redis connection successful in main!')
+    startWorker()
 }
 
 const encodeEvents = new QueueEvents('encode', {connection})

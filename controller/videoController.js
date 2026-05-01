@@ -3,10 +3,11 @@ const { PutObjectCommand } = require('@aws-sdk/client-s3');
 const prisma = require("../utils/prismaClient");
 const s3 = require('../utils/s3Client');
 const path = require('path');
-const { enCodeQueue } = require('../worker/src');
+
 const {AWS_BUCKET} = process.env
 const fs = require('fs')
 const { randomUUID } = require("crypto");
+const { enCodeQueue } = require('../worker/queues');
 
 
 
@@ -51,7 +52,7 @@ module.exports.createContent = async(req,res) => {
             }
         })
 
-        fs.unlinkSync(inputPath)
+        await fs.promises.unlink(inputPath);
 
         return res.status(200).json({message: 'Information added!', id: content.id})
 

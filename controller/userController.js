@@ -34,7 +34,7 @@ module.exports.SignIn = async(req,res) => {
             }
         })
         
-        let token = jwt.sign({id: newUser.id, firstname, lastname, email, type}, SECRET)
+        let token = jwt.sign({id: newUser.id, firstname, lastname, email, type}, SECRET, { expiresIn: '1h' })
 
 
         return res.status(200).json({message: 'User created!', token})   
@@ -66,7 +66,7 @@ module.exports.Login = async(req,res) => {
             return res.status(403).json({message: "Password don't match!"})
         }
 
-        let token = jwt.sign({id: user.id, email, firstname: user.firstname, lastname: user.lastname, type: user.type, profile: user.profile}, SECRET)
+        let token = jwt.sign({id: user.id, email, firstname: user.firstname, lastname: user.lastname, type: user.type, profile: user.profile}, SECRET, { expiresIn: '1h' })
         return res.status(200).json({message: 'Login successful!', token})
     } catch (error) {
         console.log(error);

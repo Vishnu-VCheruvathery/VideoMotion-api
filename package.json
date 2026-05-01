@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently \"nodemon index.js\" \"nodemon worker/src.js\""
+    "dev": "nodemon index.js"
   },
   "keywords": [],
   "author": "",

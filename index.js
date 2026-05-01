@@ -13,12 +13,21 @@ const server = http.createServer(app)
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3001", // or "*" for dev
+    origin: [
+      "http://localhost:3001",
+      "https://your-frontend.vercel.app"
+    ],
     methods: ["GET", "POST"]
   }
-})
+});
 
-app.use(cors())
+app.use(cors({
+  origin: [
+    "http://localhost:3001",
+    "https://your-frontend.vercel.app"
+  ],
+  credentials: true
+}));
 app.use(express.json())
 app.use('/users', userRouter)
 app.use('/videos', videoRouter);

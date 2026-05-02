@@ -70,7 +70,7 @@ module.exports.postVideo = async(req,res) => {
 
     console.log(req.body)
     const inputPath = req.file.path;
-    const outputDir = path.join(__dirname, '..', 'encoded', title)
+    const outputDir = path.join('/tmp', 'encoded', title)
  
     try {
           

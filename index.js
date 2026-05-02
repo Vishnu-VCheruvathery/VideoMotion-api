@@ -10,7 +10,8 @@ const { QueueEvents } = require('bullmq');
 const { default: Redis } = require('ioredis');
 const { startWorker } = require('./worker/src');
 const server = http.createServer(app)
-
+const fs = require('fs');
+const path = require('path');
 const io = new Server(server, {
   cors: {
     origin: [
@@ -34,6 +35,18 @@ app.use('/videos', videoRouter);
 
 const connection = new Redis(process.env.REDIS_URL, {maxRetriesPerRequest: null})
 
+const dirs = [
+  '/tmp/videos',
+  '/tmp/thumbnails',
+  '/tmp/encoded',
+  '/tmp/profiles'
+];
+
+dirs.forEach(dir => {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+});
 
 if(connection){
     console.log('Redis connection successful in main!')

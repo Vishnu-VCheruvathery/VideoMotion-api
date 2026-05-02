@@ -55,7 +55,7 @@ io.on('connection', (socket) => {
         console.log('A user disconnected')
     })
 })
-p
+
 encodeEvents.on('progress', ({jobId, data}) => {
     io.to(jobId).emit('progress', data)
 })

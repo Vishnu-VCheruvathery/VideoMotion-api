@@ -15,7 +15,8 @@ const io = new Server(server, {
   cors: {
     origin: [
       "http://localhost:3001",
-      "https://video-motion-frontend-7ysav2ey9-cvishnuvasudevan-4577s-projects.vercel.app"
+      "https://video-motion-frontend-7ysav2ey9-cvishnuvasudevan-4577s-projects.vercel.app",
+      "https://video-motion-frontend.vercel.app"
     ],
     methods: ["GET", "POST"]
   }
@@ -24,7 +25,8 @@ const io = new Server(server, {
 app.use(cors({
   origin: [
     "http://localhost:3001",
-    "https://video-motion-frontend-7ysav2ey9-cvishnuvasudevan-4577s-projects.vercel.app"
+    "https://video-motion-frontend-7ysav2ey9-cvishnuvasudevan-4577s-projects.vercel.app",
+    "https://video-motion-frontend.vercel.app"
   ],
   credentials: true
 }));

@@ -6,11 +6,12 @@ const router = express.Router();
 const path = require('path');
 
 const upload = multer({
- dest: '/tmp/videos',
+
+ dest : path.join(__dirname,  '..', '/uploads', '/videos'),
 });
 
 const thumbnailUpload = multer({
- dest: '/tmp/thumbnails',
+ dest: path.join(__dirname ,'..', '/uploads', '/thumbnails'),
 });
 
 

@@ -103,7 +103,11 @@ console.log('Master playlist created:', masterPlaylistPath);
 try {
   const { uploadQueue } = require('../worker/queues'); // ← import here, not top-level
   if (uploadQueue && typeof uploadQueue.add === 'function') {
-    await uploadQueue.add('upload', { title:baseName, outputDir, contentId, taskId, episode }, {jobId: taskId});
+    await uploadQueue.add('upload', { title:baseName, outputDir, contentId, taskId, episode }, {jobId: taskId, attempts: 3,
+    backoff: {
+      type: 'exponential',
+      delay: 5000
+    }});
     await fs.promises.unlink(inputPath);
   } else {
     console.error("uploadQueue is not properly initialized.");

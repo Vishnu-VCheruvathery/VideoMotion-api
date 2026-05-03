@@ -11,7 +11,7 @@ const prisma = require('../utils/prismaClient')
 const connection = require('./redisConfig');
 const { dbQueue } = require('./queues');
 
-
+console.log('worker booted up!')
 
 
 function getAllFiles(dir) {
@@ -35,10 +35,12 @@ function getAllFiles(dir) {
 function startWorker(){
    const encodeWorker = new Worker('encode', async job => {
       const {title, inputPath, outputDir, contentId, taskId, episode} = job.data;
+      console.log('encode worker started!')
       try {
         await encodeVideo(inputPath, outputDir, title, contentId, (progress) => job.updateProgress(progress), taskId, episode)
       } catch (error) {
         console.log(error);
+        throw error
       }
 
 }, {connection})
@@ -53,7 +55,7 @@ encodeWorker.on('failed', (job, err) => {
 
 const uploadWorker = new Worker('upload', async job => {
      const {title,  outputDir, contentId, episode} = job.data;
-    
+     console.log("Upload worker started");
      if (!fs.existsSync(outputDir)) {
   throw new Error(`Output directory not found: ${outputDir}`);
 }
@@ -118,6 +120,7 @@ console.log(`Uploaded: ${s3Key}`);
     fs.rm(outputDir, {recursive: true}, (err) => {
       if(err){
         console.error(err)
+  
       }else{
         console.log("Directory Deleted!")
       }
@@ -125,6 +128,7 @@ console.log(`Uploaded: ${s3Key}`);
    
   } catch (error) {
     console.error('Upload worker error:', error);
+    throw error
   }
 }, {connection})
 

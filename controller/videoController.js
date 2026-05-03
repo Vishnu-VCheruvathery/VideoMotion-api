@@ -70,20 +70,31 @@ module.exports.postVideo = async(req,res) => {
 
     console.log(req.body)
     const inputPath = req.file.path;
-    const outputDir = path.join('/tmp', 'encoded', title)
+    const outputDir = path.join(__dirname, '..', 'encoded', title)
  
     try {
           
           
       
-    await enCodeQueue.add('encode', {
-      title,
-      inputPath,
-      outputDir,
-      contentId: Number(contentId),
-      episode: Number(episode),
-      taskId
-    }, {jobId: taskId})
+   await enCodeQueue.add(
+  'encode',
+  {
+    title,
+    inputPath,
+    outputDir,
+    contentId: Number(contentId),
+    episode: Number(episode),
+    taskId
+  },
+  {
+    jobId: taskId,
+    attempts: 3,
+    backoff: {
+      type: 'exponential',
+      delay: 5000
+    }
+  }
+);
  
 
           return  res.status(200).json({message: 'Encoding started!', taskId}) 
